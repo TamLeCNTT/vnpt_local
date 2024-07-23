@@ -270,14 +270,12 @@ const ChuyenAcQuy = (props) => {
                 placeholder=""
               />
             </div>
-            <div className="col col-2 col-md-2">
-              <div class="d-flex align-items-left justify-content-left">
-                <NavLink to="/themchuyenacquy">
-                  <button className="btn btn-lg d-block fs-2 btn-primary">
-                    <i class="fa fa-plus" aria-hidden="true"></i>
-                  </button>
-                </NavLink>
-              </div>
+            <div className="col col-2 col-md-2 d-flex flex-column justify-content-end align-items-start">
+              <NavLink to="/themchuyenacquy">
+                <button className="btn btn-lg d-block fs-2 btn-primary">
+                  <i className="fa fa-plus" aria-hidden="true"></i>
+                </button>
+              </NavLink>
             </div>
           </div>
           <div className="table-responsive">
@@ -288,9 +286,6 @@ const ChuyenAcQuy = (props) => {
                   <th scope="col">Loại chuyển</th>
                   <th scope="col">Tên trạm điều chuyển</th>
 
-                  <th scope="col">Chủng loại</th>
-
-                  <th scope="col">Serial</th>
                   <th scope="col">Số lượng</th>
                   <th scope="col">Đơn vị quản lý chuyển</th>
                   <th scope="col">Tên trạm nhận điều chuyển</th>
@@ -311,9 +306,6 @@ const ChuyenAcQuy = (props) => {
                           <td>{item.loaichuyen}</td>
                           <td>{item.tentramc}</td>
 
-                          <td>{item.chungloai}</td>
-
-                          <td>{item.serial}</td>
                           <td>{item.soluong}</td>
                           <td>{item.donvic}</td>
                           <td>{item.tentramn}</td>

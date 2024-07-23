@@ -36,8 +36,8 @@ function App() {
 
             <Route path="/register" element={<Register />} />
             {/* thongke */}
-            {/* <Route path="/suyhao" element={<Suyhao />} />
-            <Route path="/suyhao_v2" element={<Suyhao_v2 />} /> */}
+            <Route path="/suyhao" element={<Suyhao />} />
+            <Route path="/suyhao_v2" element={<Suyhao_v2 />} />
             {/* Megawan */}
             <Route path="/tonghop" element={<Tonghop />} />
             <Route path="/tslcd" element={<TSLCD />} />

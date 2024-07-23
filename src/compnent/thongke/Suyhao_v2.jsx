@@ -2,29 +2,25 @@ import Header from "../../Layout/Header";
 import { useState, useEffect } from "react";
 import "./thongke.scss";
 import Paginations from "../../support/Paginations";
-// import Cabin_edit from "./Cabin_edit";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import ImportNhienlieu from "../../support/ImportNhienlieu";
 import { da } from "date-fns/locale";
-import nhienlieuService from "../../service/nhienlieuService";
 import suyhaoService from "../../service/suyhaoService";
 import CryptoJS from "crypto-js";
 const Suyhao_v2 = () => {
   const [lists, setLists] = useState([]);
   let flash = 0;
   const [listPg, setListPg] = useState([]);
+  const [list_export, setlist_export] = useState([]);
   const header = [
     [
-      "STT",
-      "tentram",
-      "tgbdac",
-      "tgktac",
-      "tgbdmn",
-      "tgktmn",
-      "tongtg",
-      "ghichu",
-      "tram",
+      "Tên thiết bị",
+      "Địa chỉ IP",
+      "Port",
+      "Thông số suy hao",
+      "W_low",
+      "W_high",
     ],
   ];
   const min = (a, b, c) => {
@@ -34,31 +30,7 @@ const Suyhao_v2 = () => {
   };
   useEffect(() => {
     const fetchData = () => {
-      // await suyhaoService
-      //   .get_rx_power_by_ECS("10.102.4.183", "admin", "Dhtthost@3", 1, 23)
-      //   .then((res) => {
-      //     console.log("SW2724", res.data);
-      //   })
-      //   .catch((er) => {
-      //     console.log(er);
-      //   });
-      // await suyhaoService
-      //   .get_rx_power_by_SW2724("10.102.4.252", "admin", "Dhtthost@3", 0, 27)
-      //   .then((res) => {
-      //     console.log("SW2724", res.data);
-      //   })
-      //   .catch((er) => {
-      //     console.log(er);
-      //   });
-      // await suyhaoService
-      //   .get_rx_power_by_A6400("10.102.5.101", "admin", "Dhtthost@3", 1, 24)
-      //   .then((res) => {
-      //     console.log(res.data);
-      //   })
-      //   .catch((er) => {
-      //     console.log(er);
-      //   })
-      let listshow_suyhao = [];
+      let listshow_export_suyhao = [];
       setLists([]);
       suyhaoService.getdata().then((res) => {
         console.log(res.data);
@@ -67,7 +39,7 @@ const Suyhao_v2 = () => {
         console.log(Object.values(res.data));
         Object.values(res.data).map(async (item, index) => {
           if (item.loai == "V2224G") {
-            console.log("sw2224");
+            //  console.log("sw2224");
             await suyhaoService
               .get_rx_power_by_SW2224(
                 decryptData(item.diachi),
@@ -78,18 +50,34 @@ const Suyhao_v2 = () => {
               .then((res) => {
                 // console.log(decryptData(item.diachi), item.port, res.data);
                 const correctedJsonString = res.data.RXpower.replace(/'/g, '"');
-
                 JSON.parse(correctedJsonString).map((e, i) => {
                   let newitem = {};
                   newitem.diachi = item.diachi;
+                  newitem.tenthietbi = item.tenthietbi;
                   newitem.username = item.username;
                   newitem.password = item.password;
-                  newitem.tenthietbi = item.tenthietbi;
                   newitem.loai = item.loai;
-                  newitem.RXpower = e.rx_power;
                   newitem.port = e.port;
+                  newitem.RXpower = e.rx_power;
                   newitem.w_low = e.w_low;
                   newitem.w_high = e.w_high;
+                  if (
+                    Number(e.rx_power) < 99 &&
+                    (Number(e.rx_power) - Number(e.w_low) < 1 ||
+                      Number(e.rx_power) - Number(e.w_high) > -1)
+                  ) {
+                    let item_export = {};
+                    item_export.tenthietbi = decryptData(item.tenthietbi);
+                    item_export.diachi = decryptData(item.diachi);
+                    newitem.loai = item.loai;
+                    item_export.port = e.port;
+                    item_export.RXpower = e.rx_power;
+                    item_export.w_low = e.w_low;
+                    item_export.w_high = e.w_high;
+                    listshow_export_suyhao.push(item_export);
+                    setlist_export(listshow_export_suyhao);
+                  }
+
                   setLists((prevList) =>
                     [...prevList, newitem].sort(
                       (a, b) =>
@@ -98,23 +86,12 @@ const Suyhao_v2 = () => {
                     )
                   );
                 });
-
-                // item.RXpower = res.data.RXpower;
-                // listshow_suyhao.push(item);
               })
               .catch((er) => {
                 console.log(er);
               });
           }
           if (item.loai == "ECS4120-28FV2-AF") {
-            console.log("ECS");
-            console.log(
-              decryptData(item.diachi),
-              decryptData(item.username),
-              decryptData(item.password),
-
-              item.port
-            );
             await suyhaoService
               .get_rx_power_by_ECS(
                 decryptData(item.diachi),
@@ -125,20 +102,37 @@ const Suyhao_v2 = () => {
               )
               .then((res) => {
                 const correctedJsonString = res.data.RXpower.replace(/'/g, '"');
-                console.log(JSON.parse(correctedJsonString));
+                //    console.log(JSON.parse(correctedJsonString));
 
                 JSON.parse(correctedJsonString).map((e, i) => {
-                  console.log(e, item);
+                  // console.log(e, item);
                   let newitem = {};
                   newitem.diachi = item.diachi;
+                  newitem.tenthietbi = item.tenthietbi;
                   newitem.username = item.username;
                   newitem.password = item.password;
-                  newitem.tenthietbi = item.tenthietbi;
                   newitem.loai = item.loai;
-                  newitem.RXpower = e.rx_power;
                   newitem.port = e.port;
+                  newitem.RXpower = e.rx_power;
                   newitem.w_low = e.w_low;
                   newitem.w_high = e.w_high;
+                  if (
+                    Number(e.rx_power) < 99 &&
+                    (Number(e.rx_power) - Number(e.w_low) < 1 ||
+                      Number(e.rx_power) - Number(e.w_high) > -1)
+                  ) {
+                    let item_export = {};
+                    item_export.tenthietbi = decryptData(item.tenthietbi);
+                    item_export.diachi = decryptData(item.diachi);
+                    newitem.loai = item.loai;
+                    item_export.port = e.port;
+                    item_export.RXpower = e.rx_power;
+                    item_export.w_low = e.w_low;
+                    item_export.w_high = e.w_high;
+                    listshow_export_suyhao.push(item_export);
+                    setlist_export(listshow_export_suyhao);
+                  }
+
                   setLists((prevList) =>
                     [...prevList, newitem].sort(
                       (a, b) =>
@@ -153,30 +147,44 @@ const Suyhao_v2 = () => {
               });
           }
           if (String(item.loai).includes("OS6")) {
-            console.log("A6400");
+            //  console.log("A6400");
             await suyhaoService
               .get_rx_power_by_A6400(
                 decryptData(item.diachi),
                 decryptData(item.username),
                 decryptData(item.password),
-
                 item.port
               )
               .then((res) => {
                 const correctedJsonString = res.data.RXpower.replace(/'/g, '"');
-                console.log(JSON.parse(correctedJsonString));
+                //  console.log(JSON.parse(correctedJsonString));
                 JSON.parse(correctedJsonString).map((e, i) => {
                   let newitem = {};
                   newitem.diachi = item.diachi;
+                  newitem.tenthietbi = item.tenthietbi;
                   newitem.username = item.username;
                   newitem.password = item.password;
-                  newitem.tenthietbi = item.tenthietbi;
                   newitem.loai = item.loai;
-                  newitem.RXpower = e.rx_power;
                   newitem.port = e.port;
+                  newitem.RXpower = e.rx_power;
                   newitem.w_low = e.w_low;
                   newitem.w_high = e.w_high;
-
+                  if (
+                    Number(e.rx_power) < 99 &&
+                    (Number(e.rx_power) - Number(e.w_low) < 1 ||
+                      Number(e.rx_power) - Number(e.w_high) > -1)
+                  ) {
+                    let item_export = {};
+                    item_export.tenthietbi = decryptData(item.tenthietbi);
+                    item_export.diachi = decryptData(item.diachi);
+                    newitem.loai = item.loai;
+                    item_export.port = e.port;
+                    item_export.RXpower = e.rx_power;
+                    item_export.w_low = e.w_low;
+                    item_export.w_high = e.w_high;
+                    listshow_export_suyhao.push(item_export);
+                    setlist_export(listshow_export_suyhao);
+                  }
                   setLists((prevList) =>
                     [...prevList, newitem].sort(
                       (a, b) =>
@@ -191,29 +199,43 @@ const Suyhao_v2 = () => {
               });
           }
           if (item.loai == "V2724G") {
-            console.log("sw2724");
+            //  console.log("sw2724");
             await suyhaoService
               .get_rx_power_by_SW2724(
                 decryptData(item.diachi),
                 decryptData(item.username),
                 decryptData(item.password),
-
                 item.port
               )
               .then((res) => {
                 const correctedJsonString = res.data.RXpower.replace(/'/g, '"');
-
                 JSON.parse(correctedJsonString).map((e, i) => {
                   let newitem = {};
                   newitem.diachi = item.diachi;
+                  newitem.tenthietbi = item.tenthietbi;
                   newitem.username = item.username;
                   newitem.password = item.password;
-                  newitem.tenthietbi = item.tenthietbi;
                   newitem.loai = item.loai;
-                  newitem.RXpower = e.rx_power;
                   newitem.port = e.port;
+                  newitem.RXpower = e.rx_power;
                   newitem.w_low = e.w_low;
                   newitem.w_high = e.w_high;
+                  if (
+                    Number(e.rx_power) < 99 &&
+                    (Number(e.rx_power) - Number(e.w_low) < 1 ||
+                      Number(e.rx_power) - Number(e.w_high) > -1)
+                  ) {
+                    let item_export = {};
+                    item_export.tenthietbi = decryptData(item.tenthietbi);
+                    item_export.diachi = decryptData(item.diachi);
+                    newitem.loai = item.loai;
+                    item_export.port = e.port;
+                    item_export.RXpower = e.rx_power;
+                    item_export.w_low = e.w_low;
+                    item_export.w_high = e.w_high;
+                    listshow_export_suyhao.push(item_export);
+                    setlist_export(listshow_export_suyhao);
+                  }
                   setLists((prevList) =>
                     [...prevList, newitem].sort(
                       (a, b) =>
@@ -257,16 +279,16 @@ const Suyhao_v2 = () => {
     }
   };
   const getdata = (e) => {
-    console.log(e);
+    // console.log(e);
     e.map((item, index) => {
-      console.log(item);
+      //  console.log(item);
       item.username = encryptData(item.username);
       item.password = encryptData(item.password);
       item.diachi = encryptData(item.diachi);
       item.tenthietbi = encryptData(item.tenthietbi);
     });
     suyhaoService.addData(e).then((res) => {
-      console.log(res.data);
+      //  console.log(res.data);
     });
     setLists(e);
   };
@@ -290,14 +312,13 @@ const Suyhao_v2 = () => {
                 placeholder="Nhập nội dung tìm kiếm"
               />
             </div>
-            {/* <CoHuu_Filter filter={filter} listst={listst} listgv={listgv} /> */}
             <div className="col col-md-5">
               <div className="row">
                 <div className="col col-md-10">
                   <ImportNhienlieu
                     getdata={getdata}
                     header={header}
-                    data={lists}
+                    data={list_export}
                     row={0}
                     name={
                       "DanhSach_HocVien_" +

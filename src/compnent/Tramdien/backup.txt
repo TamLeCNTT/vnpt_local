@@ -1,0 +1,45 @@
+ {/* số lượng */}
+                <div
+                  className={
+                    tentramckhac && chungloaikhac
+                      ? "col col-12 col-md-3 mt-4  mb-4"
+                      : "col col-12 col-md-3  mb-4"
+                  }
+                >
+                  <div className="md-4">
+                    <label className="form-label tonghop-label" htmlFor="name">
+                      Số lượng
+                    </label>
+                    <input
+                      className={
+                        soluongerror ? "error form-control" : "form-control"
+                      }
+                      id="teacher"
+                      name="name"
+                      onChange={(e) => changesoluong(e)}
+                      value={soluong}
+                      type="number"
+                      placeholder=""
+                    />
+                  </div>
+                </div>
+
+                {/* serial */}
+                <div className="col col-12 col-md-4  mb-4">
+                  <div className="md-4">
+                    <label className="form-label tonghop-label" htmlFor="name">
+                      Serial
+                    </label>
+                    <input
+                      className={
+                        serialerror ? "error form-control" : "form-control"
+                      }
+                      id="teacher"
+                      name="name"
+                      onChange={(e) => changeserial(e)}
+                      value={serial}
+                      type="text"
+                      placeholder=""
+                    />
+                  </div>
+                </div>
