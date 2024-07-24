@@ -21,12 +21,18 @@ class suyhaoService {
   getdata() {
     return axios.get(EMPLOYEE_API_BASE_URL+"get_data")
   }
+  deletedata(id) {
+    return axios.get(EMPLOYEE_API_BASE_URL+"delete?id="+id)
+  }
   getAll() {
     const url = `${SCHEMA}.json`;
     return axiosClient.get(url);
   }
   addData(liurlst) {
     return axios.post(EMPLOYEE_API_BASE_URL+"insert_data",liurlst)
+  }
+  UpdateData(data) {
+    return axios.post(EMPLOYEE_API_BASE_URL+"update_data",data)
   }
     update(data) {
      

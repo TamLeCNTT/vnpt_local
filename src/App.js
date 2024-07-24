@@ -23,6 +23,7 @@ import ImageUploadAndDisplay from "./compnent/ImageUpload";
 import TSLCD from "./compnent/megawa/TSLCD/TSLCD";
 import Suyhao from "./compnent/thongke/Suyhao";
 import Suyhao_v2 from "./compnent/thongke/Suyhao_v2";
+import List_Thietbị from "./compnent/thongke/List_Thietbị";
 function App() {
   return (
     <Router>
@@ -38,6 +39,7 @@ function App() {
             {/* thongke */}
             <Route path="/suyhao" element={<Suyhao />} />
             <Route path="/suyhao_v2" element={<Suyhao_v2 />} />
+            <Route path="/listthietbi" element={<List_Thietbị />} />
             {/* Megawan */}
             <Route path="/tonghop" element={<Tonghop />} />
             <Route path="/tslcd" element={<TSLCD />} />

@@ -401,14 +401,14 @@ const ThemChuyenAcQuy = (props) => {
                 <div className=" mb-4 col col-md-12 tonghop-label">
                   <p class="text-center text-uppercase fs-2">
                     {loaichuyen != "tunguon"
-                      ? "Trạm điều chuyển"
+                      ? "nhập thông tin điều chuyển vật tư"
                       : "Chi tiết bàn giao vật tư"}
                   </p>
                 </div>
               </div>
               <div className="row mb-9">
                 {/* Chọn loại */}
-                <div className="col col-12 col-md-4 mb-4">
+                <div className="col col-12 col-md-6 mb-4">
                   <div className="md-4">
                     <label className="form-label tonghop-label" htmlFor="name">
                       Chọn loại
@@ -420,60 +420,13 @@ const ThemChuyenAcQuy = (props) => {
                     />
                   </div>
                 </div>
-                {loaichuyen != "tunguon" && (
-                  <>
-                    {/* Tên trạm điều chuyển */}
-                    <div className="col col-12 col-md-4 mb-4">
-                      <div className="md-4">
-                        <label
-                          htmlFor="code"
-                          className="form-label tonghop-label"
-                        >
-                          Tên trạm điều chuyển
-                        </label>
-                        <Select
-                          onChange={(e) => changetentram(e)}
-                          options={listonptionTentram}
-                          className={
-                            tentramcerror && !tentramckhac ? "error" : ""
-                          }
-                        />
-                      </div>
-                    </div>
-                    {/* tên trạm khác */}
-                    {tentramckhac && (
-                      <div className="col col-12 col-md-4  mb-4 ">
-                        <div className="md-4">
-                          <label
-                            className="form-label tonghop-label"
-                            htmlFor="name"
-                          >
-                            Tên trạm khác
-                          </label>
-                          <input
-                            className={
-                              tentramcerror && tentramckhac
-                                ? "error form-control"
-                                : "form-control"
-                            }
-                            id="teacher"
-                            name="name"
-                            onChange={(e) => changetentramkhac(e)}
-                            value={tentramc}
-                            type="text"
-                            placeholder=""
-                          />
-                        </div>
-                      </div>
-                    )}
-                  </>
-                )}
+
                 {/* số lượng */}
                 <div
                   className={
                     tentramckhac && chungloaikhac
-                      ? "col col-12 col-md-4 mt-4  mb-4"
-                      : "col col-12 col-md-4  mb-4"
+                      ? "col col-12 col-md-6 mt-4  mb-4"
+                      : "col col-12 col-md-6  mb-4"
                   }
                 >
                   <div className="md-4">
@@ -594,26 +547,55 @@ const ThemChuyenAcQuy = (props) => {
                     </div>
                   </>
                 ))}
-                {/* ngày điều chuyển */}
-                <div className="col col-12 col-md-4  mb-4">
-                  <div className="md-4">
-                    <label className="form-label tonghop-label" htmlFor="name">
-                      Ngày điều chuyển
-                    </label>
-                    <input
-                      className={
-                        ngaychuyenerror ? "error form-control" : "form-control"
-                      }
-                      id="teacher"
-                      name="name"
-                      onChange={(e) => changengaychuyen(e)}
-                      value={ngaychuyen}
-                      type="date"
-                      placeholder=""
-                    />
-                  </div>
-                </div>
 
+                {loaichuyen != "tunguon" && (
+                  <>
+                    {/* Tên trạm điều chuyển */}
+                    <div className="col col-12 col-md-6 mb-4">
+                      <div className="md-4">
+                        <label
+                          htmlFor="code"
+                          className="form-label tonghop-label"
+                        >
+                          Tên trạm điều chuyển
+                        </label>
+                        <Select
+                          onChange={(e) => changetentram(e)}
+                          options={listonptionTentram}
+                          className={
+                            tentramcerror && !tentramckhac ? "error" : ""
+                          }
+                        />
+                      </div>
+                    </div>
+                    {/* tên trạm khác */}
+                    {tentramckhac && (
+                      <div className="col col-12 col-md-6  mb-4 ">
+                        <div className="md-4">
+                          <label
+                            className="form-label tonghop-label"
+                            htmlFor="name"
+                          >
+                            Tên trạm khác
+                          </label>
+                          <input
+                            className={
+                              tentramcerror && tentramckhac
+                                ? "error form-control"
+                                : "form-control"
+                            }
+                            id="teacher"
+                            name="name"
+                            onChange={(e) => changetentramkhac(e)}
+                            value={tentramc}
+                            type="text"
+                            placeholder=""
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </>
+                )}
                 {loaichuyen != "tunguon" ? (
                   <>
                     {/* đơn vị quản lý */}
@@ -699,13 +681,30 @@ const ThemChuyenAcQuy = (props) => {
                     </div>
                   </>
                 )}
+                {/* ngày điều chuyển */}
+                <div className="col col-12 col-md-4  mb-4">
+                  <div className="md-4">
+                    <label className="form-label tonghop-label" htmlFor="name">
+                      Ngày điều chuyển
+                    </label>
+                    <input
+                      className={
+                        ngaychuyenerror ? "error form-control" : "form-control"
+                      }
+                      id="teacher"
+                      name="name"
+                      onChange={(e) => changengaychuyen(e)}
+                      value={ngaychuyen}
+                      type="date"
+                      placeholder=""
+                    />
+                  </div>
+                </div>
               </div>
               <div className="row mb-4 mt-5  mb-4 ">
                 <div className="col col-12 col-md-12 tonghop-label">
                   <p class="text-center text-uppercase fs-2">
-                    {loaichuyen != "tunguon"
-                      ? "Trạm nhận điều chuyển"
-                      : "Chi tiết vật tư thu hồi"}
+                    {loaichuyen != "tunguon" ? "" : "Chi tiết vật tư thu hồi"}
                   </p>
                 </div>
               </div>
@@ -854,7 +853,7 @@ const ThemChuyenAcQuy = (props) => {
                     {thietbithuhoi.map((row, index) => (
                       <>
                         {/* tên thiết bị */}
-                        <div className="col col-12 col-md-6  mb-4">
+                        <div className="col col-12 col-md-6  mb-2">
                           <div className="md-4">
                             <label
                               className="form-label tonghop-label"
@@ -875,7 +874,7 @@ const ThemChuyenAcQuy = (props) => {
                         </div>
 
                         {/* serial */}
-                        <div className="col col-12 col-md-6  mb-4">
+                        <div className="col col-12 col-md-6  mb-2">
                           <div className="md-4">
                             <label
                               className="form-label tonghop-label"
@@ -914,10 +913,10 @@ const ThemChuyenAcQuy = (props) => {
                 <div className="col col-12 col-md-12">
                   <div class="d-flex align-items-center justify-content-evenly">
                     <button
-                      className="btn btn-lg d-block fs-1 btn-primary p-3"
+                      className="btn btn-lg d-block fs-1 p-3 btn-primary "
                       onClick={(e) => save(e)}
                     >
-                      Lưu mới
+                      Lưu
                     </button>
                   </div>
                 </div>
