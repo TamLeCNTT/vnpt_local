@@ -34,7 +34,7 @@ function App() {
             
             <Route path="/" element={<Login />} />
             <Route path="/home" element={<Home />} />
-
+            <Route path="/nhienlieu" element={<Nhienlieu />} />
             <Route path="/register" element={<Register />} />
             {/* thongke */}
             <Route path="/suyhao" element={<Suyhao />} />

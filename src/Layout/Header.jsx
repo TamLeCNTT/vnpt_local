@@ -122,7 +122,7 @@ const Header = (props) => {
 
                 <li className="nav-item">
                   <NavLink to="/home" className="nav-link">
-                    Báo cáo
+                    Báo cáo nhiên liệu máy nổ
                   </NavLink>
                 </li>
 
