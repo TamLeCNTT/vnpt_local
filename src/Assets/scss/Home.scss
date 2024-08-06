@@ -18,12 +18,15 @@
   position: sticky;
   top: 0;
   background-color: white; /* Màu nền của tiêu đề, có thể thay đổi */
-  z-index: 100; /* Đảm bảo tiêu đề luôn nằm trên nội dung */
+  z-index: 10; /* Đảm bảo tiêu đề luôn nằm trên nội dung */
 }
 
 .tong {
   position: sticky;
   top: 100;
   background-color: white; /* Màu nền của tiêu đề, có thể thay đổi */
-  z-index: 100; /* Đảm bảo tiêu đề luôn nằm trên nội dung */
+  z-index: -100; /* Đảm bảo tiêu đề luôn nằm trên nội dung */
+}
+.obligatory {
+  color: red;
 }

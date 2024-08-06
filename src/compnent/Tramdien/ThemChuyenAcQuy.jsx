@@ -41,11 +41,16 @@ const ThemChuyenAcQuy = (props) => {
   const [show, setshow] = useState(false);
   const [soluongthuhoi, setsoluongthuhoi] = useState(1);
   const [ngaythuhoi, setngaythuhoi] = useState("");
+  const [ngaythuhoierror, setngaythuhoierror] = useState(false);
   const [thietbi, setthietbi] = useState([{ deviceName: "", serial: "" }]);
   const [thietbithuhoi, setthietbithuhoi] = useState([
     { deviceName: "", serial: "" },
   ]);
 
+  const [tenthietbierror, settenthietbierror] = useState("");
+  const [serialthuhoierror, setserialthuhoierror] = useState(false);
+  const [noixuatkhoerror, setnoixuatkhoerror] = useState(false);
+  const [tramnhanerror, settramnhanerror] = useState(false);
   const RandomString = (length) => {
     const characters =
       "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -74,6 +79,7 @@ const ThemChuyenAcQuy = (props) => {
     { value: "Postef V-LFP48100", label: "Postef V-LFP48100" },
     { value: "DELTA ESR-48/56A B REV 06", label: "DELTA ESR-48/56A B REV 06" },
     { value: "Emerson R48-2900U", label: "Emerson R48-2900U" },
+    { value: "khac", label: "Khác" },
   ];
   const optiontenthietbi = [
     { value: "Mean Well SE-1000-48", label: "Mean Well SE-1000-48" },
@@ -94,134 +100,175 @@ const ThemChuyenAcQuy = (props) => {
   };
   const save = async (e) => {
     let flashcreatenew = 0;
-    // if (!loaichuyen) {
-    //   toast.error("Vui lòng chọn loại chuyển");
-    //   setloaichuyenerror(true);
-    // } else {
-    //   setloaichuyenerror(false);
-    //   if (!tentramc) {
-    //     toast.error("Vui lòng chọn tên trạm chuyển");
-    //     settentramcerror(true);
-    //   } else {
-    //     settentramcerror(false);
-    //     if (!chungloai) {
-    //       toast.error("Vui lòng chọn chủng loại");
-    //       setchungloaierror(true);
-    //     } else {
-    //       setchungloaierror(false);
-    //       if (!serial) {
-    //         setserialerror(true);
-    //         toast.error("Vui lòng nhập serial");
-    //       } else {
-    //         setserialerror(false);
-    //         if (!soluong) {
-    //           toast.error("Vui lòng nhập số lượng");
-    //           setsoluongerror(true);
-    //         } else {
-    //           setsoluongerror(false);
-    //           if (!donvic) {
-    //             toast.error("Vui lòng chọn đơn vị quản lý chuyển");
-    //             setdonvicerror(true);
-    //           } else {
-    //             setdonvicerror(false);
-    //             if (!tentramn) {
-    //               toast.error("Vui lòng chọn tên trạm nhận");
-    //               settentramnerror(true);
-    //             } else {
-    //               settentramnerror(false);
-    //               if (!donvin) {
-    //                 toast.error("Vui lòng chọn đơn vị nhận");
-    //                 setdonvinerror(true);
-    //               } else {
-    //                 setdonvinerror(false);
-    //                 if (!ngaychuyen) {
-    //                   toast.error("Vui lòng chọn ngày chuyển");
-    //                   setngaychuyenerror(true);
-    //                 } else {
-    //                   setngaychuyenerror(false);
-    //                   flashcreatenew = 1;
-    //                 }
-    //               }
-    //             }
-    //           }
-    //         }
-    //       }
-    //     }
-    //   }
-    // }
-    // if (flashcreatenew == 1) {
-    const result = await Swal.fire({
-      title: "Bạn có chắc chắn muốn lưu?",
-      text: "Bạn còn một số ô chưa điền đủ thông tin.",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Lưu",
-      cancelButtonText: "Hủy",
-    });
-
-    if (result.isConfirmed) {
-      if (loaichuyen != "tunguon") {
-        let id = RandomString(16);
-        ChuyenAcQuyService.update({
-          id: id,
-          data: {
-            id: id,
-            loaichuyen: loaichuyen,
-            tentramc: tentramc,
-            thietbi: thietbi,
-            soluong: soluong,
-            donvic: donvic,
-            tentramn: tentramn,
-            donvin: donvin,
-            ghichu: ghichu,
-            ngaychuyen: ngaychuyen,
-          },
-        }).then((res) => {
-          console.log(res.data);
-          navtive("/chuyenacquy");
-          toast.success("Thêm chuyển thành công");
-          setshow(false);
-        });
-        console.log(
-          loaichuyen,
-          tentramc,
-          chungloai,
-          serial,
-          soluong,
-          donvic,
-          tentramn,
-          donvin,
-          ghichu,
-          ngaychuyen,
-          decryptData(props.dataRedux.user.username) + RandomString(6)
-        );
+    if (!loaichuyen) {
+      toast.error("Vui lòng chọn loại chuyển");
+      setloaichuyenerror(true);
+    } else {
+      setloaichuyenerror(false);
+      if (!tentramc && loaichuyen != "tunguon") {
+        toast.error("Vui lòng chọn tên trạm chuyển");
+        settentramcerror(true);
       } else {
-        let id = RandomString(16);
-        ChuyenTuNguonService.update({
-          id: id,
-          data: {
-            loaichuyen: loaichuyen,
-            id: id,
-            thietbibangiao: thietbi,
-            soluongbangiao: soluong,
-            soluongthuhoi: soluongthuhoi,
-            thietbithuhoi: thietbithuhoi,
-            noixuatkho: noixuatkho,
-            tramnhan: tramnhan,
-            ngaychuyen: ngaychuyen,
-            ngaythuhoi: ngaythuhoi,
-          },
-        }).then((res) => {
-          console.log(res.data);
-          // navtive("/chuyenacquy");
-          toast.success("Thêm chuyển thành công");
-        });
+        settentramcerror(false);
+        if (
+          thietbi.filter((device) => device.deviceName !== "").length < soluong
+        ) {
+          console.log(thietbi);
+          toast.error("Vui lòng chọn đầy đủ chủng loại");
+          setchungloaierror(true);
+        } else {
+          setchungloaierror(false);
+          if (
+            thietbi.filter((device) => device.serial !== "").length < soluong
+          ) {
+            setserialerror(true);
+            toast.error("Vui lòng nhập đầy đủ serial");
+          } else {
+            setserialerror(false);
+            if (!soluong) {
+              toast.error("Vui lòng nhập số lượng");
+              setsoluongerror(true);
+            } else {
+              setsoluongerror(false);
+              if (!donvic && loaichuyen != "tunguon") {
+                toast.error("Vui lòng chọn đơn vị quản lý chuyển");
+                setdonvicerror(true);
+              } else {
+                setdonvicerror(false);
+                if (!tentramn && loaichuyen != "tunguon") {
+                  toast.error("Vui lòng chọn tên trạm nhận");
+                  settentramnerror(true);
+                } else {
+                  settentramnerror(false);
+                  if (!donvin && loaichuyen != "tunguon") {
+                    toast.error("Vui lòng chọn đơn vị nhận");
+                    setdonvinerror(true);
+                  } else {
+                    setdonvinerror(false);
+                    if (!ngaychuyen) {
+                      toast.error("Vui lòng chọn ngày chuyển");
+                      setngaychuyenerror(true);
+                    } else {
+                      setngaychuyenerror(false);
+                      if (loaichuyen == "tunguon") {
+                        if (!noixuatkho) {
+                          setnoixuatkhoerror(true);
+                          toast.error("Vui lòng nhập nơi xuất kho");
+                        } else {
+                          setnoixuatkhoerror(false);
+                          if (!tramnhan) {
+                            settramnhanerror(true);
+                            toast.error("Vui lòng nhập trạm nhận");
+                          } else {
+                            settramnhanerror(false);
+                            if (
+                              thietbithuhoi.filter(
+                                (device) => device.deviceName !== ""
+                              ).length < soluongthuhoi
+                            ) {
+                              settenthietbierror(true);
+                              toast.error("Vui lòng nhập tên thiết bị thu hồi");
+                            } else {
+                              settenthietbierror(false);
+                              if (
+                                thietbithuhoi.filter(
+                                  (device) => device.serial !== ""
+                                ).length < soluongthuhoi
+                              ) {
+                                setserialthuhoierror(true);
+                                toast.error(
+                                  "Vui lòng nhập serial thiết bị thu hồi"
+                                );
+                              } else {
+                                setserialthuhoierror(false);
+                              }
+                            }
+                          }
+                        }
+                      } else {
+                        flashcreatenew = 1;
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     }
+    if (flashcreatenew == 1) {
+      const result = await Swal.fire({
+        title: "Bạn có chắc chắn muốn lưu?",
+        text: "Bạn còn một số ô chưa điền đủ thông tin.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Lưu",
+        cancelButtonText: "Hủy",
+      });
 
-    // }
+      if (result.isConfirmed) {
+        if (loaichuyen != "tunguon") {
+          let id = RandomString(16);
+          ChuyenAcQuyService.update({
+            id: id,
+            data: {
+              id: id,
+              loaichuyen: loaichuyen,
+              tentramc: tentramc,
+              thietbi: thietbi,
+              soluong: soluong,
+              donvic: donvic,
+              tentramn: tentramn,
+              donvin: donvin,
+              ghichu: ghichu,
+              ngaychuyen: ngaychuyen,
+            },
+          }).then((res) => {
+            console.log(res.data);
+            navtive("/chuyenacquy");
+            toast.success("Thêm chuyển thành công");
+            setshow(false);
+          });
+          console.log(
+            loaichuyen,
+            tentramc,
+            chungloai,
+            serial,
+            soluong,
+            donvic,
+            tentramn,
+            donvin,
+            ghichu,
+            ngaychuyen,
+            decryptData(props.dataRedux.user.username) + RandomString(6)
+          );
+        } else {
+          let id = RandomString(16);
+          ChuyenTuNguonService.update({
+            id: id,
+            data: {
+              loaichuyen: loaichuyen,
+              id: id,
+              thietbibangiao: thietbi,
+              soluongbangiao: soluong,
+              soluongthuhoi: soluongthuhoi,
+              thietbithuhoi: thietbithuhoi,
+              noixuatkho: noixuatkho,
+              tramnhan: tramnhan,
+              ngaychuyen: ngaychuyen,
+              ngaythuhoi: ngaythuhoi,
+            },
+          }).then((res) => {
+            console.log(res.data);
+            // navtive("/chuyenacquy");
+            toast.success("Thêm chuyển thành công");
+          });
+        }
+      }
+    }
   };
   useEffect(() => {
     let list = [];
@@ -281,8 +328,12 @@ const ThemChuyenAcQuy = (props) => {
       setchungloaikhac(false);
     }
   };
-  const changechungloaikhac = (e) => {
-    setchungloai(e.target.value);
+  const changechungloaikhac = (index, field, value) => {
+    const newthietbi = thietbi.map((row, i) =>
+      i === index ? { ...row, [field]: value } : row
+    );
+    setthietbi(newthietbi);
+    console.log(newthietbi);
   };
   const changeserial = (e) => {
     setserial(e.target.value);
@@ -377,11 +428,24 @@ const ThemChuyenAcQuy = (props) => {
     return itemElements;
   };
   const handleInputChange = (index, field, value) => {
-    const newthietbi = thietbi.map((row, i) =>
-      i === index ? { ...row, [field]: value } : row
-    );
-    setthietbi(newthietbi);
-    console.log(newthietbi);
+    if (loaichuyen != "tunguon") {
+      if (value == "khac") {
+        setchungloaikhac(true);
+      } else {
+        setchungloaikhac(false);
+        const newthietbi = thietbi.map((row, i) =>
+          i === index ? { ...row, [field]: value } : row
+        );
+        setthietbi(newthietbi);
+        console.log(newthietbi);
+      }
+    } else {
+      const newthietbi = thietbi.map((row, i) =>
+        i === index ? { ...row, [field]: value } : row
+      );
+      setthietbi(newthietbi);
+      console.log(newthietbi);
+    }
   };
   const handleInputsChange = (index, field, value) => {
     const newthietbi = thietbithuhoi.map((row, i) =>
@@ -411,7 +475,7 @@ const ThemChuyenAcQuy = (props) => {
                 <div className="col col-12 col-md-6 mb-4">
                   <div className="md-4">
                     <label className="form-label tonghop-label" htmlFor="name">
-                      Chọn loại
+                      Chọn loại <a className="obligatory">*</a>
                     </label>
                     <Select
                       onChange={(e) => changeloaichuyen(e)}
@@ -431,7 +495,7 @@ const ThemChuyenAcQuy = (props) => {
                 >
                   <div className="md-4">
                     <label className="form-label tonghop-label" htmlFor="name">
-                      Số lượng
+                      Số lượng <a className="obligatory">*</a>
                     </label>
                     <input
                       className={
@@ -457,7 +521,8 @@ const ThemChuyenAcQuy = (props) => {
                               className="form-label tonghop-label"
                               htmlFor="name"
                             >
-                              Chủng loại {index + 1}
+                              Chủng loại {index + 1}{" "}
+                              <a className="obligatory">*</a>
                             </label>
                             <Select
                               onChange={(e) =>
@@ -478,7 +543,8 @@ const ThemChuyenAcQuy = (props) => {
                                 className="form-label tonghop-label"
                                 htmlFor="name"
                               >
-                                Chủng loại khác
+                                Chủng loại khác {index + 1}{" "}
+                                <a className="obligatory">*</a>
                               </label>
                               <input
                                 className={
@@ -488,8 +554,13 @@ const ThemChuyenAcQuy = (props) => {
                                 }
                                 id="teacher"
                                 name="name"
-                                onChange={(e) => changechungloaikhac(e)}
-                                value={chungloai}
+                                onChange={(e) =>
+                                  changechungloaikhac(
+                                    index,
+                                    "deviceName",
+                                    e.target.value
+                                  )
+                                }
                                 type="text"
                                 placeholder=""
                               />
@@ -506,7 +577,8 @@ const ThemChuyenAcQuy = (props) => {
                               className="form-label tonghop-label"
                               htmlFor="name"
                             >
-                              Tên thiết bị {index + 1}
+                              Tên thiết bị {index + 1}{" "}
+                              <a className="obligatory">*</a>
                             </label>
                             <Select
                               onChange={(e) =>
@@ -528,7 +600,7 @@ const ThemChuyenAcQuy = (props) => {
                           className="form-label tonghop-label"
                           htmlFor="name"
                         >
-                          Serial {index + 1}
+                          Serial {index + 1} <a className="obligatory">*</a>
                         </label>
                         <input
                           className={
@@ -557,7 +629,7 @@ const ThemChuyenAcQuy = (props) => {
                           htmlFor="code"
                           className="form-label tonghop-label"
                         >
-                          Tên trạm điều chuyển
+                          Tên trạm điều chuyển <a className="obligatory">*</a>
                         </label>
                         <Select
                           onChange={(e) => changetentram(e)}
@@ -576,7 +648,7 @@ const ThemChuyenAcQuy = (props) => {
                             className="form-label tonghop-label"
                             htmlFor="name"
                           >
-                            Tên trạm khác
+                            Tên trạm khác <a className="obligatory">*</a>
                           </label>
                           <input
                             className={
@@ -611,7 +683,7 @@ const ThemChuyenAcQuy = (props) => {
                           className="form-label tonghop-label"
                           htmlFor="name"
                         >
-                          Đơn vị quản lí
+                          Đơn vị quản lí <a className="obligatory">*</a>
                         </label>
                         <Select
                           onChange={(e) => changedonvic(e)}
@@ -636,11 +708,13 @@ const ThemChuyenAcQuy = (props) => {
                           className="form-label tonghop-label"
                           htmlFor="name"
                         >
-                          Nơi xuất kho
+                          Nơi xuất kho <a className="obligatory">*</a>
                         </label>
                         <input
                           className={
-                            soluongerror ? "error form-control" : "form-control"
+                            noixuatkhoerror
+                              ? "error form-control"
+                              : "form-control"
                           }
                           id="teacher"
                           name="name"
@@ -664,11 +738,13 @@ const ThemChuyenAcQuy = (props) => {
                           className="form-label tonghop-label"
                           htmlFor="name"
                         >
-                          Trạm nhận
+                          Trạm nhận <a className="obligatory">*</a>
                         </label>
                         <input
                           className={
-                            soluongerror ? "error form-control" : "form-control"
+                            tramnhanerror
+                              ? "error form-control"
+                              : "form-control"
                           }
                           id="teacher"
                           name="name"
@@ -685,7 +761,7 @@ const ThemChuyenAcQuy = (props) => {
                 <div className="col col-12 col-md-4  mb-4">
                   <div className="md-4">
                     <label className="form-label tonghop-label" htmlFor="name">
-                      Ngày điều chuyển
+                      Ngày điều chuyển <a className="obligatory">*</a>
                     </label>
                     <input
                       className={
@@ -701,7 +777,11 @@ const ThemChuyenAcQuy = (props) => {
                   </div>
                 </div>
               </div>
-              <div className="row mb-4 mt-5  mb-4 ">
+              <div
+                className={
+                  loaichuyen != "tunguon" ? "row mb-4   " : "row mb-4  mt-5   "
+                }
+              >
                 <div className="col col-12 col-md-12 tonghop-label">
                   <p class="text-center text-uppercase fs-2">
                     {loaichuyen != "tunguon" ? "" : "Chi tiết vật tư thu hồi"}
@@ -718,7 +798,8 @@ const ThemChuyenAcQuy = (props) => {
                           htmlFor="code"
                           className="form-label tonghop-label"
                         >
-                          Tên trạm nhận điều chuyển
+                          Tên trạm nhận điều chuyển{" "}
+                          <a className="obligatory">*</a>
                         </label>
                         <Select
                           onChange={(e) => changetentramn(e)}
@@ -736,7 +817,7 @@ const ThemChuyenAcQuy = (props) => {
                             className="form-label tonghop-label"
                             htmlFor="name"
                           >
-                            Tên trạm khác
+                            Tên trạm khác <a className="obligatory">*</a>
                           </label>
                           <input
                             className={
@@ -760,7 +841,7 @@ const ThemChuyenAcQuy = (props) => {
                           className="form-label tonghop-label"
                           htmlFor="name"
                         >
-                          Đơn vị quản lí
+                          Đơn vị quản lí <a className="obligatory">*</a>
                         </label>
                         <Select
                           onChange={(e) => changedonvin(e)}
@@ -805,7 +886,7 @@ const ThemChuyenAcQuy = (props) => {
                           className="form-label tonghop-label"
                           htmlFor="name"
                         >
-                          Ngày thu hồi
+                          Ngày thu hồi <a className="obligatory">*</a>
                         </label>
                         <input
                           className={
@@ -835,7 +916,7 @@ const ThemChuyenAcQuy = (props) => {
                           className="form-label tonghop-label"
                           htmlFor="name"
                         >
-                          Số lượng
+                          Số lượng <a className="obligatory">*</a>
                         </label>
                         <input
                           className={
@@ -859,14 +940,15 @@ const ThemChuyenAcQuy = (props) => {
                               className="form-label tonghop-label"
                               htmlFor="name"
                             >
-                              Tên thiết bị {index + 1}
+                              Tên thiết bị {index + 1}{" "}
+                              <a className="obligatory">*</a>
                             </label>
                             <Select
                               onChange={(e) =>
                                 handleInputsChange(index, "deviceName", e.value)
                               }
                               className={
-                                chungloaierror && !chungloaikhac ? "error" : ""
+                                tenthietbierror && !chungloaikhac ? "error" : ""
                               }
                               options={optiontenthietbi}
                             />
@@ -880,11 +962,11 @@ const ThemChuyenAcQuy = (props) => {
                               className="form-label tonghop-label"
                               htmlFor="name"
                             >
-                              Serial {index + 1}
+                              Serial {index + 1} <a className="obligatory">*</a>
                             </label>
                             <input
                               className={
-                                serialerror
+                                serialthuhoierror
                                   ? "error form-control"
                                   : "form-control"
                               }
