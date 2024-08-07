@@ -10,6 +10,7 @@ import { da } from "date-fns/locale";
 import nhienlieuService from "../service/nhienlieuService";
 import "../Assets/scss/Home.scss";
 import Select from "react-select";
+import ImPortMayNo from "../support/ImPortMayNo";
 const Home = () => {
   const [lists, setLists] = useState([]);
   const [listOLd, setListOld] = useState([]);
@@ -238,46 +239,46 @@ const Home = () => {
         };
         // console.log(data);
         listDataexport.push(listdata[index]);
-        let data1 = {
-          stt: "",
-          tentram: "",
-          tgbdac: "",
-          tgktac: "",
-          tgbdmn: "",
-          tgktmn: "",
-          sophut: "",
-          tongtg: "",
-          dinhmuc: "",
-          tongnhienlieudau: "",
-          tongnhienlieuxang: "",
+        // let data1 = {
+        //   stt: "",
+        //   tentram: "",
+        //   tgbdac: "",
+        //   tgktac: "",
+        //   tgbdmn: "",
+        //   tgktmn: "",
+        //   sophut: "",
+        //   tongtg: "",
+        //   dinhmuc: "",
+        //   tongnhienlieudau: "",
+        //   tongnhienlieuxang: "",
 
-          loainhienlieu: "",
-          ats: "",
-          ghichu: "",
-          tram: "",
-        };
-        listDataexport.push(data1);
+        //   loainhienlieu: "",
+        //   ats: "",
+        //   ghichu: "",
+        //   tram: "",
+        // };
+        // listDataexport.push(data1);
         listDataexport.push(data);
-        data = {
-          stt: "",
-          tentram: "",
-          tgbdac: "",
-          tgktac: "",
-          tgbdmn: "",
-          tgktmn: "",
-          sophut: "",
-          tongtg: "",
-          dinhmuc: "",
-          tongnhienlieudau: "",
-          tongnhienlieuxang: "",
+        // data = {
+        //   stt: "",
+        //   tentram: "",
+        //   tgbdac: "",
+        //   tgktac: "",
+        //   tgbdmn: "",
+        //   tgktmn: "",
+        //   sophut: "",
+        //   tongtg: "",
+        //   dinhmuc: "",
+        //   tongnhienlieudau: "",
+        //   tongnhienlieuxang: "",
 
-          loainhienlieu: "",
-          ats: "",
-          ghichu: "",
-          tram: "",
-        };
-        listDataexport.push(data);
-        console.log("con cho con");
+        //   loainhienlieu: "",
+        //   ats: "",
+        //   ghichu: "",
+        //   tram: "",
+        // };
+        // listDataexport.push(data);
+        // console.log("con cho con");
       } else {
         listDataexport.push(listdata[index]);
         //     console.log(listdata[index]);
@@ -285,7 +286,7 @@ const Home = () => {
     });
     data = {
       stt: "",
-      tentram: "Tổng",
+      tentram: "Tổng cộng",
       tgbdac: "",
       tgktac: "",
       tgbdmn: "",
@@ -442,7 +443,7 @@ const Home = () => {
             <div className="col col-md-5">
               <div className="row">
                 <div className="col col-md-10">
-                  <ImPort
+                  <ImPortMayNo
                     getdata={getdata}
                     header={header}
                     row={6}
@@ -544,7 +545,7 @@ const Home = () => {
                         </tr>
                       );
                     })}
-                <tr className="text-td tong" role="alert">
+                <tr className="text-td tong  " role="alert">
                   <td colSpan={6} className="text-td">
                     Tổng
                   </td>
