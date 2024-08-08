@@ -145,9 +145,30 @@ const ImPortMayNo = (props) => {
         };
       }
     }
+
+    // tô màu vượt VHMPĐ
+    const dataRowvout = worksheet.getRows(2, worksheet.rowCount - 1);
+    dataRowvout.forEach((row) => {
+      // Giả sử cột ghi chú là cột O (index 15)
+      const noteCell = row.getCell(15);
+      if (noteCell.value && noteCell.value.toString().includes("vượt VHMPĐ")) {
+        row.eachCell({ includeEmpty: true }, (cell) => {
+          cell.font = { bold: true };
+          cell.alignment = { horizontal: "center", vertical: "middle" };
+          cell.fill = {
+            type: "pattern",
+            pattern: "solid",
+            size: 16,
+            fgColor: { argb: "FFFF00" }, // Màu vàng
+          };
+        });
+      }
+    });
+
     // **Gộp ô từ cột A đến F cho hàng có giá trị "Tổng"**
     const dataRows = worksheet.getRows(2, worksheet.rowCount - 1); // Lấy tất cả các hàng dữ liệu
     let centerCount = 2;
+
     dataRows.forEach((row) => {
       if (row.getCell(2).value === "Tổng") {
         // Giả sử giá trị "Tổng" nằm ở cột B (index 2)

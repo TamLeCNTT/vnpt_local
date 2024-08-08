@@ -11,6 +11,7 @@ import nhienlieuService from "../service/nhienlieuService";
 import "../Assets/scss/Home.scss";
 import Select from "react-select";
 import ImPortMayNo from "../support/ImPortMayNo";
+import { parse, differenceInMinutes } from "date-fns";
 const Home = () => {
   const [lists, setLists] = useState([]);
   const [listOLd, setListOld] = useState([]);
@@ -51,6 +52,7 @@ const Home = () => {
     // console.log(e);
     let listdata = [];
     let data = {};
+    const format = "dd/MM/yyyy HH:mm";
     e.map((item, index) => {
       if (index != 0 && item.__EMPTY_9) {
         console.log(
@@ -66,7 +68,14 @@ const Home = () => {
             )
           )
         );
-        console.log(item.__EMPTY_1);
+        console.log(
+          differenceInMinutes(
+            parse(item.__EMPTY_5, format, new Date()),
+            parse(item.__EMPTY_3, format, new Date())
+          ),
+          item.__EMPTY_3,
+          item.__EMPTY_5 ? item.__EMPTY_5 : "khong cos kt"
+        );
         data = {
           stt: index,
           tentram: item.__EMPTY_1,
@@ -75,7 +84,24 @@ const Home = () => {
           tgbdmn: item.__EMPTY_4 ? item.__EMPTY_4 : "",
           tgktmn: item.__EMPTY_5 ? item.__EMPTY_5 : "",
 
-          sophut: item.__EMPTY_6,
+          sophut:
+            differenceInMinutes(
+              parse(item.__EMPTY_5, format, new Date()),
+              parse(item.__EMPTY_3, format, new Date())
+            ) &&
+            differenceInMinutes(
+              parse(item.__EMPTY_5, format, new Date()),
+              parse(item.__EMPTY_3, format, new Date())
+            ) > 60
+              ? Number(item.__EMPTY_6) -
+                (Number(
+                  differenceInMinutes(
+                    parse(item.__EMPTY_5, format, new Date()),
+                    parse(item.__EMPTY_3, format, new Date())
+                  )
+                ) -
+                  60)
+              : item.__EMPTY_6,
           tongtgdau: 0,
           tongtgxang: 0,
           dinhmuc:
@@ -101,7 +127,34 @@ const Home = () => {
             (e) => e.tentram == item.__EMPTY_1
           )[0].nhienlieu,
           ats: item.__EMPTY_7 ? item.__EMPTY_7 : "",
-          ghichu: item.__EMPTY_8 ? item.__EMPTY_8 : "",
+          ghichu:
+            differenceInMinutes(
+              parse(item.__EMPTY_5, format, new Date()),
+              parse(item.__EMPTY_3, format, new Date())
+            ) &&
+            differenceInMinutes(
+              parse(item.__EMPTY_5, format, new Date()),
+              parse(item.__EMPTY_3, format, new Date())
+            ) > 60
+              ? item.__EMPTY_8
+                ? "Trừ " +
+                  (differenceInMinutes(
+                    parse(item.__EMPTY_5, format, new Date()),
+                    parse(item.__EMPTY_3, format, new Date())
+                  ) -
+                    60) +
+                  " phút vượt VHMPĐ" +
+                  item.__EMPTY_8
+                : "Trừ " +
+                  (differenceInMinutes(
+                    parse(item.__EMPTY_5, format, new Date()),
+                    parse(item.__EMPTY_3, format, new Date())
+                  ) -
+                    60) +
+                  " phút vượt VHMPĐ"
+              : item.__EMPTY_8
+              ? item.__EMPTY_8
+              : "",
           tram: item.__EMPTY_9,
         };
         // console.log(data);
